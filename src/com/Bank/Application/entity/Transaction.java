@@ -14,6 +14,10 @@ public class Transaction implements Serializable {
     private TransactionType transType;
     private Operation operation;
 
+    public Transaction(){
+        this.id = getUniqueId();
+    }
+
     /**
      * Instantiates a new Transaction.
      *
@@ -88,7 +92,7 @@ public class Transaction implements Serializable {
      *
      * @param transType the trans type
      */
-    public void setTransType(TransactionType transType){
+    public void setTransactionType(TransactionType transType){
         this.transType = transType;
     }
 
@@ -104,20 +108,10 @@ public class Transaction implements Serializable {
     /**
      * Set card.
      *
-     * @param card the card
+     * @param operation the card
      */
-    public void setCard(String card){
-        //System.out.println(this.operation);
-        this.operation.setCard(card);
-    }
-
-    /**
-     * Set card cash amount.
-     *
-     * @param cashAmount the cash amount
-     */
-    public void setCardCashAmount(int cashAmount){
-        this.operation.setAmountOfCash(cashAmount);
+    public void setOperation(Operation operation){
+        this.operation = operation;
     }
 
     /**

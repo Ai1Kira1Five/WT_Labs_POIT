@@ -15,8 +15,8 @@ public class Main {
      * @throws IOException the io exception
      */
     public static void main(String[] args) throws IOException {
-        Main myProg = new Main();
-        myProg.start();
+        Main myProgram = new Main();
+        myProgram.start();
     }
 
     public void start() throws IOException{

@@ -1,6 +1,7 @@
 package com.Bank.application.presentation;
 
 import com.Bank.application.controller.Controller;
+import com.Bank.application.entity.Operation;
 import com.Bank.application.entity.Transaction;
 import com.Bank.application.entity.TransactionType;
 
@@ -22,32 +23,67 @@ public class View {
      */
     public static void mainMenuLoop() throws IOException{
         boolean work = true;
+        boolean check = true;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        while (work) {
-            Controller.showMainMenu();
+        System.out.println("Where you want to take information?(xml/txt)");
+        String answer = in.readLine();
+        while(check){
+            if(answer.compareTo("xml") == 0){
+                while(work){
+                    Controller.showMainMenu();
 
-            String result = in.readLine();
-            switch (result) {
-                case "1":
-                    Controller.showTransactions();
-                    break;
-                case "2":
-                    Controller.addNewTransaction();
-                    break;
-                case "3":
-                    Controller.deleteTransaction();
-                    break;
-                case "4":
-                    Controller.updateTransaction();
-                    break;
-                case "5":
-                    Controller.compareTransactions();
-                    break;
-                case "0":
-                    work = false;
-                    break;
-            }
+                    String result = in.readLine();
+                    switch (result){
+                        case "1":
+                            Controller.showTransactionsFromXML();
+                            break;
+                        case "2":
+                            Controller.addNewTransactionToXML();
+                            break;
+                        case "3":
+                            Controller.deleteTransactionFromXML();
+                            break;
+                        case "4":
+                            Controller.updateTransactionInXML();
+                            break;
+                        case "5":
+                            Controller.compareTransactionsInXML();
+                            break;
+                        case "0":
+                            work = false;
+                            check = false;
+                            break;
+                    }
+                }
+            } else if(answer.compareTo("txt") == 0){
+                while (work) {
+                    Controller.showMainMenu();
+
+                    String result = in.readLine();
+                    switch (result) {
+                        case "1":
+                            Controller.showTransactions();
+                            break;
+                        case "2":
+                            Controller.addNewTransaction();
+                            break;
+                        case "3":
+                            Controller.deleteTransaction();
+                            break;
+                        case "4":
+                            Controller.updateTransaction();
+                            break;
+                        case "5":
+                            Controller.compareTransactions();
+                            break;
+                        case "0":
+                            work = false;
+                            check = false;
+                            break;
+                    }
+                }
+            } else System.out.println("Wrong answer, retype please...");
         }
     }
 
@@ -112,13 +148,17 @@ public class View {
         System.out.println("Enter date");
         transaction.setDate(in.readLine());
 
-        transaction.setTransType(TransactionType.TRANSACTION);
+        transaction.setTransactionType(TransactionType.TRANSACTION);
 
         System.out.println("Enter type of card");
-        transaction.setCard(in.readLine());
+        String card = in.readLine();
 
         System.out.println("Enter amount of cash");
-        transaction.setCardCashAmount(Integer.valueOf(in.readLine()));
+        int cash = Integer.valueOf(in.readLine());
+        Operation operation = new Operation();
+        operation.setCard(card);
+        operation.setAmountOfCash(cash);
+        transaction.setOperation(operation);
     }
 
     /**
@@ -160,8 +200,6 @@ public class View {
         System.out.println("2. Destination bank");
         System.out.println("3. Date");
         System.out.println("4. Status(1:TRANSACTION, 2:PAYMENT, 3:WITHDRAWAL)");
-        System.out.println("5. Type of card");
-        System.out.println("6. Amount of cash");
         System.out.println("0. Exit.");
 
         String answer = in.readLine();
@@ -184,23 +222,15 @@ public class View {
                 String newStatus = in.readLine();
                 switch (newStatus) {
                     case "1":
-                        transaction.setTransType(TransactionType.TRANSACTION);
+                        transaction.setTransactionType(TransactionType.TRANSACTION);
                         break;
                     case "2":
-                        transaction.setTransType(TransactionType.PAYMENT);
+                        transaction.setTransactionType(TransactionType.PAYMENT);
                         break;
                     case "3":
-                        transaction.setTransType(TransactionType.WITHDRAWAL);
+                        transaction.setTransactionType(TransactionType.WITHDRAWAL);
                         break;
                 }
-                break;
-            case "5":
-                System.out.println("Input new card type: ");
-                transaction.setCard(in.readLine());
-                break;
-            case "6":
-                System.out.println("Input new amount of cash: ");
-                transaction.setCardCashAmount(Integer.valueOf(in.readLine()));
                 break;
             case "0":
                 break;

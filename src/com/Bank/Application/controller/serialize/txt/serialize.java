@@ -1,9 +1,9 @@
-package com.Bank.application.controller.serialize;
+package com.Bank.application.controller.serialize.txt;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class serialize<T> implements ISerialize<T>{
+public class serialize<T> implements ISerialize<T> {
     /**
      * Deserialize array list.
      *

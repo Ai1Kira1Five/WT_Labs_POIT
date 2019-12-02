@@ -1,6 +1,5 @@
 package com.Bank.application.controller;
 
-import com.Bank.application.dao.transactionDao.ITransactionDAO;
 import com.Bank.application.dao.transactionDao.TransactionDAO;
 import com.Bank.application.entity.Operation;
 import com.Bank.application.entity.Transaction;
@@ -8,7 +7,6 @@ import com.Bank.application.presentation.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.Bank.application.controller.DataManager.*;
 
@@ -31,7 +29,11 @@ public class Controller {
      */
     public static void showTransactions() throws IOException {
         ArrayList<Transaction> transactions = dao.getTransactions();
+        View.showTransactions(transactions);
+    }
 
+    public static void showTransactionsFromXML() throws IOException {
+        ArrayList<Transaction> transactions = dao.getTransactionsFromXML();
         View.showTransactions(transactions);
     }
 
@@ -44,8 +46,14 @@ public class Controller {
         Operation newOperation = new Operation();
         Transaction newTransaction = new Transaction(newOperation);
         View.getNewTransaction(newTransaction);
-
         dao.insert(newTransaction);
+    }
+
+    public static void addNewTransactionToXML() throws IOException {
+        Operation newOperation = new Operation();
+        Transaction newTransaction = new Transaction(newOperation);
+        View.getNewTransaction(newTransaction);
+        dao.insertToXML(newTransaction);
     }
 
     /**
@@ -54,19 +62,23 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void deleteTransaction() throws IOException {
-        List<Transaction> transactions = dao.getTransactions();
+        dao.delete(View.getDeleteIndex());
+    }
 
-        int index = View.getDeleteIndex();
-
-        dao.delete(index);
-
+    public static void deleteTransactionFromXML() throws IOException {
+        dao.delete(View.getDeleteIndex());
     }
 
     public static void deleteTransactionByID(int index) throws IOException {
-        List<Transaction> transactions;
-        transactions = DataManager.Decode();
+        ArrayList<Transaction> transactions = dao.getTransactions();
         transactions.remove( index );
-        updateData(transactions);
+        dao.save(transactions);
+    }
+
+    public static void deleteTransactionByIDFromXML(int index) throws IOException {
+        ArrayList<Transaction> transactions = dao.getTransactionsFromXML();
+        transactions.remove( index );
+        dao.saveToXML(transactions);
     }
 
     /**
@@ -75,15 +87,25 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void updateTransaction() throws IOException {
-        List<Transaction> transactions;
-        transactions = DataManager.Decode();
+        ArrayList<Transaction> transactions = dao.getTransactions();
 
         int transactionId = View.getUpdateIndex() - 1;
-        Transaction gettedTransaction = transactions.get(transactionId);
+        Transaction getTransaction = transactions.get(transactionId);
 
-        View.getUpdatedTransaction(gettedTransaction);
+        View.getUpdatedTransaction(getTransaction);
 
-        updateData(transactions);
+        dao.save(transactions);
+    }
+
+    public static void updateTransactionInXML() throws IOException {
+        ArrayList<Transaction> transactions = dao.getTransactionsFromXML();
+
+        int transactionId = View.getUpdateIndex() - 1;
+        Transaction getTransaction = transactions.get(transactionId);
+
+        View.getUpdatedTransaction(getTransaction);
+
+        dao.saveToXML(transactions);
     }
 
     /**
@@ -92,11 +114,19 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void compareTransactions() throws IOException{
-        List<Transaction> transactions = DataManager.Decode();
+        ArrayList<Transaction> transactions = dao.getTransactions();
         View.showSortMenu();
-
         sort(transactions);
         View.showTransactions(transactions);
+        dao.save(transactions);
+    }
+
+    public static void compareTransactionsInXML() throws IOException{
+        ArrayList<Transaction> transactions = dao.getTransactionsFromXML();
+        View.showSortMenu();
+        sort(transactions);
+        View.showTransactions(transactions);
+        dao.saveToXML(transactions);
     }
 
 }
