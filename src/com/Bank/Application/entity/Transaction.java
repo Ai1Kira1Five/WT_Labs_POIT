@@ -1,11 +1,12 @@
-package Domain.Entity;
+package com.Bank.application.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * The type Transaction.
  */
-public class Transaction {
+public class Transaction implements Serializable {
     private String id;
     private String sourceBank;
     private String destinationBank;

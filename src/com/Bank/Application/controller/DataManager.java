@@ -1,8 +1,8 @@
-package com.Bank.Application.Services;
+package com.Bank.application.controller;
 
-import Domain.Entity.Operation;
-import Domain.Entity.Transaction;
-import Domain.Entity.TransactionType;
+import com.Bank.application.entity.Operation;
+import com.Bank.application.entity.Transaction;
+import com.Bank.application.entity.TransactionType;
 
 import java.io.*;
 import java.util.*;
@@ -11,6 +11,9 @@ import java.util.*;
  * The type Data manager.
  */
 public class DataManager {
+    private static String split = ";";
+    private static String csvFileName = "operations.csv";
+
     /**
      * Update data.
      *
@@ -18,42 +21,44 @@ public class DataManager {
      * @throws IOException the io exception
      */
     public static void updateData(List<Transaction> transactions) throws IOException {
-        List<List<String>> rows = new LinkedList<>(Arrays.asList());
-        for (Transaction transaction : transactions) {
-            rows.add(Arrays.asList( transaction.getId(),
-                                    transaction.getSourceBank(),
-                                    transaction.getDestinationBank(),
-                                    transaction.getDate(),
-                                    transaction.getTransactionType().name(),
-                                    transaction.getOperation().getCard(),
-                                    Integer.toString(transaction.getOperation().getAmountOfCash())
-                                  )
-                    );
-        }
-
-        FileWriter csvWriter = new FileWriter("operations.csv");
-        csvWriter.append("Id");
-        csvWriter.append(";");
-        csvWriter.append("Source");
-        csvWriter.append(";");
-        csvWriter.append("Destination");
-        csvWriter.append(";");
-        csvWriter.append("Date");
-        csvWriter.append(";");
-        csvWriter.append("TransactionType");
-        csvWriter.append(";");
-        csvWriter.append("Card");
-        csvWriter.append(";");
-        csvWriter.append("AmountOfCash");
-        csvWriter.append("\n");
-
-        for (List<String> rowData : rows) {
-            csvWriter.append(String.join(";", rowData));
+        FileWriter csvWriter = new FileWriter(csvFileName);
+        try{
+            List<List<String>> rows = new LinkedList<>(Arrays.asList());
+            for (Transaction transaction : transactions) {
+                rows.add(Arrays.asList( transaction.getId(),
+                        transaction.getSourceBank(),
+                        transaction.getDestinationBank(),
+                        transaction.getDate(),
+                        transaction.getTransactionType().name(),
+                        transaction.getOperation().getCard(),
+                        Integer.toString(transaction.getOperation().getAmountOfCash())
+                        )
+                );
+            }
+            csvWriter.append("Id");
+            csvWriter.append(split);
+            csvWriter.append("Source");
+            csvWriter.append(split);
+            csvWriter.append("Destination");
+            csvWriter.append(split);
+            csvWriter.append("Date");
+            csvWriter.append(split);
+            csvWriter.append("TransactionType");
+            csvWriter.append(split);
+            csvWriter.append("Card");
+            csvWriter.append(split);
+            csvWriter.append("AmountOfCash");
             csvWriter.append("\n");
+
+            for (List<String> rowData : rows) {
+                csvWriter.append(String.join(split, rowData));
+                csvWriter.append("\n");
+            }
         }
-        //TODO: finally
-        csvWriter.flush();
-        csvWriter.close();
+        finally {
+            csvWriter.flush();
+            csvWriter.close();
+        }
     }
 
     /**
@@ -63,8 +68,7 @@ public class DataManager {
      * @throws IOException the io exception
      */
     public static List<Transaction> Decode() throws IOException {
-        //TODO: constants
-        BufferedReader csvReader = new BufferedReader(new FileReader("operations.csv"));
+        BufferedReader csvReader = new BufferedReader(new FileReader(csvFileName));
         String row;
         int iteration = 0;
         List<Transaction> transactions = new ArrayList<>();
@@ -73,7 +77,7 @@ public class DataManager {
                 iteration++;
                 continue;
             }
-            String[] data = row.split(";");
+            String[] data = row.split(split);
             transactions.add(new Transaction(data[0], data[1], data[2], data[3], TransactionType.valueOf(data[4]),new Operation(data[5], Integer.valueOf(data[6]))));
         }
         csvReader.close();
@@ -87,7 +91,6 @@ public class DataManager {
      * @return the list
      * @throws IOException the io exception
      */
-    //TODO: layers refactor
     public static List<Transaction> sort(List<Transaction> transactions) throws IOException{
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 

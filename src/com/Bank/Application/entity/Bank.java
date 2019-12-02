@@ -1,11 +1,12 @@
-package Domain.Entity;
+package com.Bank.application.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * The type Bank.
  */
-public class Bank {
+public class Bank implements Serializable {
     /**
      * The Transactions.
      */

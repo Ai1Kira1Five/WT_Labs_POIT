@@ -1,7 +1,8 @@
-package Prezentation;
+package com.Bank.application.presentation;
 
-import Domain.Entity.Transaction;
-import Domain.Entity.TransactionType;
+import com.Bank.application.controller.Controller;
+import com.Bank.application.entity.Transaction;
+import com.Bank.application.entity.TransactionType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +13,43 @@ import java.util.List;
  * The type View.
  */
 public class View {
+
+
+    /**
+     * Main menu loop.
+     *
+     * @throws IOException the io exception
+     */
+    public static void mainMenuLoop() throws IOException{
+        boolean work = true;
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+        while (work) {
+            Controller.showMainMenu();
+
+            String result = in.readLine();
+            switch (result) {
+                case "1":
+                    Controller.showTransactions();
+                    break;
+                case "2":
+                    Controller.addNewTransaction();
+                    break;
+                case "3":
+                    Controller.deleteTransaction();
+                    break;
+                case "4":
+                    Controller.updateTransaction();
+                    break;
+                case "5":
+                    Controller.compareTransactions();
+                    break;
+                case "0":
+                    work = false;
+                    break;
+            }
+        }
+    }
 
     /**
      * Show main menu.

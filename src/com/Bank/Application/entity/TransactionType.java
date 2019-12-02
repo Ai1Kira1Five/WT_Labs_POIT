@@ -1,4 +1,4 @@
-package Domain.Entity;
+package com.Bank.application.entity;
 
 /**
  * The enum Transaction type.

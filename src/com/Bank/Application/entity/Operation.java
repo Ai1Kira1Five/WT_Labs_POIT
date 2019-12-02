@@ -1,9 +1,11 @@
-package Domain.Entity;
+package com.Bank.application.entity;
+
+import java.io.Serializable;
 
 /**
  * The type Operation.
  */
-public class Operation {
+public class Operation implements Serializable {
     private String card;
     private int amountOfCash;
 

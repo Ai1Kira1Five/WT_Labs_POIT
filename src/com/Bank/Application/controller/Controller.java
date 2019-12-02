@@ -1,19 +1,22 @@
-package Prezentation;
+package com.Bank.application.controller;
 
-import Domain.Entity.Operation;
-import Domain.Entity.Transaction;
-import com.Bank.Application.Services.DataManager;
+import com.Bank.application.dao.transactionDao.ITransactionDAO;
+import com.Bank.application.dao.transactionDao.TransactionDAO;
+import com.Bank.application.entity.Operation;
+import com.Bank.application.entity.Transaction;
+import com.Bank.application.presentation.View;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.Bank.Application.Services.DataManager.*;
+import static com.Bank.application.controller.DataManager.*;
 
 /**
  * The type Controller.
  */
 public class Controller {
-
+    static TransactionDAO dao = new TransactionDAO();
     /**
      * Show main menu.
      */
@@ -27,8 +30,7 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void showTransactions() throws IOException {
-        List<Transaction> transactions;
-        transactions = Decode();
+        ArrayList<Transaction> transactions = dao.getTransactions();
 
         View.showTransactions(transactions);
     }
@@ -39,15 +41,11 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void addNewTransaction() throws IOException {
-        List<Transaction> transactions;
-        transactions = DataManager.Decode();
-
         Operation newOperation = new Operation();
         Transaction newTransaction = new Transaction(newOperation);
         View.getNewTransaction(newTransaction);
 
-        transactions.add(newTransaction);
-        updateData(transactions);
+        dao.insert(newTransaction);
     }
 
     /**
@@ -56,12 +54,18 @@ public class Controller {
      * @throws IOException the io exception
      */
     public static void deleteTransaction() throws IOException {
-        List<Transaction> transactions;
-        transactions = DataManager.Decode();
+        List<Transaction> transactions = dao.getTransactions();
 
         int index = View.getDeleteIndex();
 
-        transactions.remove( index - 1);
+        dao.delete(index);
+
+    }
+
+    public static void deleteTransactionByID(int index) throws IOException {
+        List<Transaction> transactions;
+        transactions = DataManager.Decode();
+        transactions.remove( index );
         updateData(transactions);
     }
 
@@ -87,7 +91,7 @@ public class Controller {
      *
      * @throws IOException the io exception
      */
-    public  static void compareTransactions() throws IOException{
+    public static void compareTransactions() throws IOException{
         List<Transaction> transactions = DataManager.Decode();
         View.showSortMenu();
 
