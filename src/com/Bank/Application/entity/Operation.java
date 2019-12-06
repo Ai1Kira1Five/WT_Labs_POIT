@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * The type Operation.
  */
+
 public class Operation implements Serializable {
     private String card;
     private int amountOfCash;
